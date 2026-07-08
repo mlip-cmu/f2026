@@ -2,8 +2,6 @@
 
 (17-445/17-645/17-745 Machine Learning in Production)
 
-**Note: This is last semester's version of the assignment. It may still be updated before it is formally released.**
-
 ## Overview
 
 In this assignment, you will zoom out from the ML component and think about risks and how to mitigate them for an ML-powered system in a concrete scenario. We will use several approaches to proactively think about risks through the lens of requirements and safety engineering, for some of which you will build your own tooling.
@@ -12,7 +10,7 @@ Learning goals:
 * Understand the role of the environment and environmental assumptions in system risks and establishing system requirements
 * Consider multiple different mitigation strategies in the system design to eliminate or reduce risks
 * Design reliable measures for qualities of interest
-* Apply hazard analysis to anticipate risks
+* Apply hazard analysis to anticipate risks through the systematic exploration of values and losses
 * Apply FTA to understand risks and plan mitigations in an AI-enabled system
 * Understand the strengths and limitations of these techniques.
 * Discuss the benefits and risks of (partially) automating hazard analysis.
@@ -37,7 +35,7 @@ The main goal of this assignment is to anticipate and proactively mitigate risks
 
 1. Understand the goals of this project, especially the goals of the different stakeholders and how they may or may not align with the system and model goals. For this assignment, explicitly break down goals into *organizational goals* (from the perspective of the dashcam company), *system goals* (for the new feature), *user goals* (for at least 3 different direct or indirect stakeholders), and *model goals* (for the person recognition model). Your list of goals should be reasonably comprehensive and may include multiple goals at each level. Provide a brief description of how goals relate to each other (e.g., “better model accuracy should help with higher user satisfaction”). To ensure that the goals are concrete and measurable, design a *measure* for one goal from each category that you could use to assess how well you achieve those goals. The measures could be described in the 3-step process (measure, data, operationalization, as we discussed in the *Model Accuracy* lecture) with sufficient precision for others to conduct the measurement independently, manually or automatically. 
 2. Identify direct and indirect stakeholders who care about or are affected by the system and the new feature (in addition to the stakeholders you may have already considered in Step 1).
-3. Identify risks using the early steps of an STPA-style analysis, as introduced in class: Identify values and goals per stakeholder, identify possible losses, and turn those into requirements (REQ). Focus on risk related to specific harms for the stakeholder you analyze. 
+3. Apply hazard analysis to anticipate risks, using the early steps of an STPA-style analysis as introduced in class: identify values and goals per stakeholder, identify possible losses, and turn those into requirements (REQ). Focus on risk related to specific harms for the stakeholder you analyze. 
 4. Analyze the requirements that you consider as important with a critical focus on assumptions the system designers may wrongly make (e.g., assumptions that seem plausible, but may not actually always hold in production). For each requirement, list plausible assumptions about the environment (ASM) commonly made that are needed to achieve this requirement. Also identify the responsibilities (SPEC) of the software components (both AI and non-AI) that are needed to establish the REQ in conjunction with ASM. 
 5. For an important requirement, think more systematically about what could go wrong using fault tree analysis. Start with the top event for the violation of the requirement and break it into intermediate and basic events (which may correspond to a violation of an environmental assumption or an AI component making mistakes). The fault tree should cover possible violations of assumptions and specifications from the previous step (if plausible), but can include additional information.
 6. Finally, describe at least two strategies for mitigating the risks of potential failures for the analyzed requirement and incorporate them into an updated version of the fault tree. Mitigation strategies will typically be at the system level, outside of the AI component itself, and will reduce the risk of the requirement violation. Briefly explain how each suggested mitigation strategy can (partially or fully) address the risk.
@@ -50,12 +48,12 @@ We suggest that you try to go through the steps above manually first for a small
 
 The use of LLM-based automation in safety analysis is controversial. On the one hand it can scale the analysis and reduce costs, making it more likely that developers actually do it. On the other hand, it can lead to shallow analyses with limited domain expertise.
 
-For this assignment, you will build some LLM-powered tooling to support steps 2-4 above. Given a description of the system, implement LLM assistance for identifying stakeholders, for identifying goals, values, losses, and requirements, and for analyzing those requirements. Also implement some support for filtering and prioritizing hazards. This will allow you to scale the analysis. 
+For this assignment, you will build some LLM-powered tooling to support steps 2-4 above. Given a description of the system, implement LLM assistance for identifying stakeholders, for identifying goals, values, losses, and requirements, and for analyzing those requirements. Also implement some support for filtering and prioritizing losses and requirements. This will allow you to scale the analysis. 
 
 For this assignment, we want you to do two things:
 
 * Run the analysis at scale with your automation support, creating a report covering 10-20 stakeholders and their goals, 5-10 losses/requirements for each stakeholder, and 3-10 specifications/assumptions for each requirement. 
-* Report key findings, focused on four results that you found important or surprising. Do not fully rely on LLM-generation and do not create an overwhelming amount of details that a developer would likely just ignore, but use your judgment to actively curate a small number of results that will be the most important to developers of the system.  
+* Report key findings, focused on four results that you found important or surprising. Do not fully rely on LLM-generation and do not create an overwhelming amount of details that a developer would likely just ignore, but use your judgment to actively curate a small number of results that will be the most important to developers of the system. This curation is a human-judgment step. Your tooling may help surface and rank candidates, but the final selection of these four results and the reasoning for why they matter should be your own, and you should be able to explain that reasoning to the course staff.  
 
 This does not need to be fully automated. In fact, we strongly recommend to create some human-in-the-loop iteration where developers can check and modify results at intermediate steps, rather than implementing a single fully automated end-to-end pipeline. You do not need to implement a user interface; a notebook or scripts are sufficient.
 
@@ -69,7 +67,7 @@ See Canvas for instructions of how to create an empty private repository with Gi
 
 **Full report:** In file `analysis_results.md`, include a comprehensive risk report for the first four analysis steps, including at least 10 stakeholders and their goals and at least 50 losses/requirements and corresponding assumptions/specifications. The report should be legible to a software engineer who is familiar with the Dashcam system (i.e., no need for extensive explanations; focus on the results).
 
-**Curated results (2 pages/1000 words max):** In file `key_results.md`, create a shorter report of *four* important or surprising losses and corresponding requirements you identified (and trace them back to stakeholders and their values/goals). For each of these four requirements list important corresponding environment assumptions (ASM) and specifications (SPEC) that are needed to establish this requirement (REQ). The curated results can be a part of the automatically generated results, but can also include information the automation did not suggest.
+**Curated results (2 pages/1000 words max):** In file `key_results.md`, create a shorter report of *four* important or surprising losses and corresponding requirements you identified (and trace them back to stakeholders and their values/goals). For each of these four requirements list important corresponding environment assumptions (ASM) and specifications (SPEC) that are needed to establish this requirement (REQ). The curated results can be a part of the automatically generated results, but can also include information the automation did not suggest. Choosing these four and explaining why they are the most important or surprising is your own judgment call, so do not hand off this step entirely to a model. Be ready to walk the course staff through how and why you selected them this way.
 
 **Fault tree analysis and mitigations (0.5 pages/250 words and 2 figures max):** In file `fault_tree.md`:
 
@@ -78,7 +76,7 @@ See Canvas for instructions of how to create an empty private repository with Gi
 3. Suggest two mitigation strategies to reduce the risk of the failure analyzed in the fault tree. Both mitigations should be at the system level, outside of the ML component (i.e., not just "collect more training data"). Briefly explain how the mitigations reduce the risk. 
 4. Embed/link a second fault tree graphic that updates the first fault tree with those mitigations (e.g., add/remove events).
 
-**Explanation/reflection:** Within 2 weeks of submitting the assignment meet with a member of the course staff during office hours to explain your solution. We may ask questions about your implementation or your curated results. In addition, we may engage you on the following reflection prompts: To what degree was the automation useful to you? How could it be improved, e.g., if your tool had access to source code of the Dashcam system? Did you find any results that were surprising to you? What would it take for you to adopt hazard analysis in your own projects?
+**Explanation/reflection:** Within 2 weeks of submitting the assignment meet with a member of the course staff during office hours to explain your solution. We may ask questions about your implementation or your curated results. We will probe your reasoning about how you curated the four key results, and we will not award credit if we believe you offloaded this task. In addition, we may engage you on the following reflection prompts: To what degree was the automation useful to you? How could it be improved, e.g., if your tool had access to source code of the Dashcam system? Did you find any results that were surprising to you? What would it take for you to adopt hazard analysis in your own projects?
 
 
 Page limits are recommendations and not strictly enforced. You can exceed the page limit if there is a good reason. We prefer precise and concise answers over long and rambling ones.
@@ -95,7 +93,7 @@ The assignment is worth 100 points. Solutions not submitted to Canvas as a link 
 * [ ] 10 points: The curated results in file `key_results.md`  in the root directory of the repository use the terms requirement, specification, and assumption correctly: The requirement mention only phenomena in the environment ("world"). All stated assumptions relate to phenomena in the environment or map those to shared phenomena accessible by the software ("machine"). All stated specifications mention only those phenomena in the interface between the environment and the software. The requirement, environmental assumption, and software specifications fit reasonably together and are plausible in the scenario.
 * [ ] 10 points: A file `fault_tree.md` in the root directory of the repository includes a fault tree that shows possible causes behind the violation of one requirement from the curated list. The included fault tree is syntactically valid. The fault tree includes all plausible violations of assumptions and specifications identified in the curated results for this requirement. The fault tree includes a wrong prediction of a model as one event.
 * [ ] 10 points: A file `fault_tree.md` in the root directory of the repository describes at least two mitigation strategies, corresponding to the selected requirement from the curated results. The description explains how the risk is reduced or eliminated by each mitigation. The mitigations are at the system level outside the ML component, rather than improving the reliability of the ML component itself. The mitigations are reflected correctly in an updated fault tree.
-* [ ] 10 points: You can convince the course staff during office hours within 2 weeks of submitting your solution that you understand your solution and have engaged with the reflection questions.
+* [ ] 10 points: You can convince the course staff during office hours within 2 weeks of submitting your solution that you understand your solution, that you have engaged your own human judgment in curating the four key results, and that have engaged with the reflection questions.
 
 ## Technical hints
 
