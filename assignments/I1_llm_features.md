@@ -1,6 +1,9 @@
 # Individual Assignment 1: Building LLM-enabled Features for a Product
 
-(17-445/17-645/17-745 Machine Learning in Production; 11-695 AI Engineering)
+(17-445/17-645/17-745 Machine Learning in Production)
+
+**Note: This is last semester's version of the assignment. It may still be updated before it is formally released.**
+
 
 ## Overview
 

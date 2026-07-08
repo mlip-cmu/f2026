@@ -2,6 +2,8 @@
 
 (17-445/17-645 Machine Learning in Production)
 
+**Note: This is last semester's version of the assignment. It may still be updated before it is formally released.**
+
 ## Overview
 
 In this assignment you will consider how to explain a model and its decisions to end users. You will prototype global explanations and individual explanations. 

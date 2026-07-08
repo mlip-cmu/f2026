@@ -2,6 +2,8 @@
 
 (17-445/17-645/17-745 Machine Learning in Production; 11-695 AI Engineering)
 
+**Note: This is last semester's version of the assignment. It may still be updated before it is formally released.**
+
 ## Overview
 
 In this project, you will implement, evaluate, operate, monitor, and evolve a recommendation service for a movie streaming service. You work with a streaming service with about 1 million customers and 20,000 movies (for comparison, Netflix has about 180 million subscribers and over 300 million estimated users worldwide and about 13,000 titles worldwide). Imagine you are in the early days of video streaming and are building a Netflix-like streaming business with a massive catalog of not very recent movies that you mostly could license cheaply.
