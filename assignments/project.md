@@ -108,12 +108,20 @@ This milestone is worth 106 points:
 
 **Learning goals:**
 
+* Deploy a model inference service with containers
+* Automate retraining and deployment of models
 * Test all components of the learning infrastructure
 * Build an infrastructure to assess model and data quality
 * Build an infrastructure to evaluate a model in production
 * Use continuous integration to test infrastructure and models
 
 **Tasks:**
+
+
+*Containerization and deployment:* Containerize your model inference service with Docker and deploy it to serve the recommendations. 
+In addition, explore running your inference service on a separate machine or cloud instance (e.g., using provided cloud credits) while routing requests to it from your virtual machine, and provide evidence that you tried this (e.g., a screenshot or log). You do not need to keep running the service this way, just establish it as an option.
+
+*Automate model updates:* Set up an automated process to train a new version of your model on more recent data and deploy it into production. You should be able to trigger this process with a shell script. Provide evidence that this mechanism works to deploy an updated model to your running service. 
 
 *Pipeline implementation, testing, and data quality:* First, if you have not done so already, migrate your learning infrastructure to a format that is easy to maintain and test. That will likely involve moving out of a notebook and splitting code for different steps in the pipeline into separate modules that can be called independently. Test all steps of your pipeline so that you have reasonable confidence in the correctness, robustness, and possibly other qualities of your learning solution (including your solution to the cold start problem). Also test the correctness of your prediction service. Design, implement, and test a strategy to deal with data quality problems, especially schema enforcement and detecting substantial drift.
 
@@ -125,7 +133,12 @@ This milestone is worth 106 points:
 
 *Good commits and code review:* At this point, we do require that you work with Git for all your code and changes. Make reasonably cohesive commits with appropriate commit messages. We recommend adopting a process with your team in which you use [pull requests to review and integrate changes](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests).
 
-**Technical details:** For *model accuracy*, we accept a wide range of possible metrics, including proxies that provide only partial insights about accuracy. Make a judgement about what metric is appropriate for the problem and feasible to implement. For *online evaluation* of model accuracy and cost, you should use production data to test your model. You can evaluate the model with a fixed snapshot of production data in this milestone -- you should focus on establishing measures, but you do not need to continuously monitor the system until Milestone 3.
+**Technical details:** 
+For *containerization and deployment*, we recommend Docker. You can package the model inside the container or have the container load the model from an external resource (e.g., a mounted file system or web server). Your deployment strategy should also fully integrate your solution to the cold-start problem, so that the self descriptions of new users are analyzed automatically as they sign up. The training pipeline can but does not need to be containerized.
+
+For *automating model updates*, we recommend to explore strategies how you can switch between models without downtime, though we also accept implementations that result in short interruptions of service while you swap in a new model.
+
+For *model accuracy*, we accept a wide range of possible metrics, including proxies that provide only partial insights about accuracy. Make a judgement about what metric is appropriate for the problem and feasible to implement. For *online evaluation* of model accuracy and cost, you should use production data to test your model. You can evaluate the model with a fixed snapshot of production data in this milestone -- you should focus on establishing measures, but you do not need to continuously monitor the system until Milestone 3.
 
 The *pipeline* refers to all parts of the learning process. For example, it should have functionality to gather training/evaluation data from the Kafka stream and the provided APIs (and possibly other data sources), to clean data, and extract features, train models, evaluate predictions, serialize models, serve models, and collect telemetry. All those steps should be reasonably robust and repeatable. You may store intermediate results in files or databases on your virtual machine or in the cloud if you like. Overall, the implementation should make it easy to run the pipeline for experimentation (e.g., after changing hyperparameters) or on more recent data.
 
@@ -141,6 +154,8 @@ You do not need to create a visual frontend for this milestone.
 
 The report should include the following sections:
 
+* *Containerization and deployment* (0.5 pages max): Briefly describe how you containerized and deployed your inference service. Describe how you analyze new users' self descriptions for the cold-start problem in production. Provide a pointer to the Dockerfile(s) and other relevant implementations (preferably a direct GitHub link). Provide evidence that you can route requests to serve recommendations from your Docker container running on a different machine.
+* *Automated model updates* (0.5 pages max): Briefly describe how you automatically retrain and deploy updated models. Provide a pointer to the relevant implementation (preferably a direct GitHub link).
 * *Offline evaluation* (1 page of text max, not counting figures): Briefly explain how you conduct your offline evaluation. This should include a description of the validation/test data and how it was derived and a brief description and justification of the used accuracy metric (in the usual 3-step description). Include a brief discussion of how you avoided the common pitfalls in offline evaluations discussed in class. Include or link to evaluation results in your report. Provide a pointer to the corresponding implementation in your code.
 * *Online evaluation* (1 page of text max, not counting figures): Briefly describe the accuracy and cost metrics used for evaluating model quality and system quality in production, the telemetry data collected, and the operationalization of the metric. Include or link to evaluation results in your report. Provide a pointer to the corresponding implementation in your code.
 * *Data quality* (0.5 pages max): Briefly describe the steps you have taken with regard to data quality and provide a pointer to the corresponding implementation in your code. The checks cover at least some schema issues and some possible drift.
@@ -151,12 +166,14 @@ The report should include the following sections:
 
 **Grading:** This milestone is worth 103 points: 
 
-* [ ] 10pt: Most commits (>80%) are reasonably cohesive and contain reasonable commit messages. The code is generally reasonably well structured and understandable.
+* [ ] 5pt: Most commits (>80%) are reasonably cohesive and contain reasonable commit messages. The code is generally reasonably well structured and understandable.
 * [ ] 10pt: The report describes how the pipeline is implemented and structured and contains a pointer to the pipeline implementation. The implementation matches the description.
+* [ ] 10pt: The inference service is containerized and deployed, serving recommendations in production. The service considers the self-description of new users to solve the cold-start problem. The report describes the containerization and deployment and provides a pointer to the Dockerfile(s) and relevant implementation. Evidence is provided that recommendations can be routed to the container running on a different machine. The description matches the implementation.
+* [ ] 5pt: A script is provided to automatically retrain models on more recent data and to deploy it into production. The report describes the process and provides pointers to the corresponding implementation, and demonstrates that an updated model can be deployed to the running service. The description matches the implementation.
 * [ ] 10pt: Data quality checks are described in the report and implemented (with a link to the implementation provided). The checks cover all interfaces to external data, including the Kafka stream, the user and movie APIs, and your recommendation API.  The description matches the implementation. At a minimum, schema violations in inputs are detected and handled and strong data drift is detected.
 * [ ] 10pt: A suitable strategy for *offline* model evaluation is described in the report that covers (1) validation/test split, (2) a clear 3-step description of the used metric, and (3) a plausible justification of why the metric is suitable for the problem and avoids common pitfalls. A link to a corresponding implementation that matches the description is provided. Offline evaluation results are included or linked for the used model that were computed with the described process and metric.
-* [ ] 10pt: A suitable strategy for online model evaluation is described in the usual three step format: (1) the model accuracy metric used, (2) the telemetry data collected, and (3) how the metric is computed from the data. A link to a corresponding implementation that matches the description is provided. Online evaluation results that were computed with the described process and metric are included or linked.
-* [ ] 10pt: A suitable strategy for online cost evaluation is described in the usual three step format: (1) the cost metric used, (2) the telemetry data collected, and (3) how the metric is computed from the data. The costs need to include the license cost of the movie provided in the movie metadata and the cost of any LLM usage. A link to a corresponding implementation that matches the description is provided. Online evaluation results that were computed with the described process and metric are included or linked.
+* [ ] 5pt: A suitable strategy for online model evaluation is described in the usual three step format: (1) the model accuracy metric used, (2) the telemetry data collected, and (3) how the metric is computed from the data. A link to a corresponding implementation that matches the description is provided. Online evaluation results that were computed with the described process and metric are included or linked.
+* [ ] 5pt: A suitable strategy for online cost evaluation is described in the usual three step format: (1) the cost metric used, (2) the telemetry data collected, and (3) how the metric is computed from the data. The costs need to include the license cost of the movie provided in the movie metadata and the cost of any LLM usage. A link to a corresponding implementation that matches the description is provided. Online evaluation results that were computed with the described process and metric are included or linked.
 * [ ] 10pt: A description of how the pipeline was tested is included in the report and a link to the corresponding tests is included. The report argues why the performed testing was adequate. A coverage report is included or linked.
 * [ ] 10pt: The infrastructure tests are all automated with a continuous integration service and triggered automatically when code is changed on GitHub. A pointer to the service is provided.
 * [ ] 10pt: An updated team contract is provided with a reason for the change, or a statement that the team contract remains unchanged is included.
@@ -172,29 +189,26 @@ The report should include the following sections:
 
 **Learning goals:**
 
-* Deploy a model prediction service with containers and support model updates without downtime
+* Switch between model versions without downtime, for updates and for experiments
 * Build and operate a monitoring infrastructure for system health and model quality
 * Build an infrastructure for experimenting in production 
-* Infrastructure for automatic periodic retraining of models
 * Version and track provenance of training data and models
 * Prepare for operational incidents with an incident response plan
 
 **Tasks:** *Important: Read availability requirements. The service should be available during the 72 hours before the milestone submission.*
 
-After gaining confidence in your infrastructure quality and automating essential tasks, we will now focus on deployment, versioning, experimentation, and monitoring.
+Building on the tested, containerized, automatically-updating service from Milestone 2, we will now focus on operating it: switching versions without downtime, monitoring, experimentation, and versioning.
 
-*Containerization:* First, containerize your model inference service (and possibly other parts of your infrastructure). Add support for switching between different versions without downtime (e.g., adding a load balancer).
+*Monitoring:* First, set up a monitoring infrastructure that monitors (a) the health of your recommendation service (including availability), (b) the quality of its predictions, (c) the operating costs, and (d) data drift. You might want to set up automated alerts if problems are detected.
 
-*Automated model updates:* Second, set up an automated process to periodically train a new version of your model on more recent data and push those models into production (e.g. every 3 days). Also fully automate all attempts at solving the cold-start problem using the users' self descriptions as new users sign up.
+*Regular model updates:* Regularly update your models with new data (with the infrastructure developed in Milestone 2). We recommend to trigger updates on a regular schedule, like every 3 days. We require at minimum 3 updates during operation in this milestone.
 
-*Monitoring:* Third, set up a monitoring infrastructure that monitors (a) the health of your recommendation service (including availability), (b) the quality of its predictions, (c) the operating costs, and (d) data drift. You might want to set up automated alerts if problems are detected.
-
-*Experimentation:* Fourth, build or set up an experimentation environment, in which you can compare two models in production (e.g., for an A/B test or a canary release). Report confidence in differences between models using appropriate statistical tests. Run and report results of at least two experiments:
+*Experimentation:* Second, build or set up an experimentation environment, in which you can compare two models in production (e.g., for an A/B test or a canary release). Report confidence in differences between models using appropriate statistical tests. Run and report results of at least two experiments:
 
 * What's the impact of your approach using the users' self descriptions for overcoming the cold-start problem on prediction quality?
 * Can you effectively reduce operating cost by getting users to watch movies with cheaper licensing costs, and how much would this reduce the user satisfaction (i.e., movie ratings)?
 
-*Versioning and provenance:* Track provenance of your predictions and models such that for every prediction your recommendation service makes you can answer: (1) which version of the model has made the prediction, (2) which version of the pipeline code and ML algorithms has been used to train that model, and (3) what data has been used for training that model.
+*Versioning and provenance:* Third, track provenance of your predictions and models such that for every prediction your recommendation service makes you can answer: (1) which version of the model has made the prediction, (2) which version of the pipeline code and ML algorithms has been used to train that model, and (3) what data has been used for training that model.
 
 *Incident response plan:* Finally, prepare your team to handle operational incidents. At some point after this milestone and before the end of Milestone 4, we will introduce an incident that requires your team to respond quickly. This could take many forms, for example a sudden change in operating conditions, an urgent request from management to take down or fix part of the system, or a problem with your system or one of its dependencies. We will not tell you in advance what form the incident takes or when it occurs, so treat your running service as a real production system that you need to watch. Provide your team mentor with instructions of how management should contact your team in urgent cases.
 
@@ -204,9 +218,8 @@ Write a short incident response plan that describes how your team will handle su
 
 *Availability:* Keep your recommendation service running as much as possible for the remainder of the project. We will evaluate the availability in the *72 hours before your submission and the 96 hours after your submission*. Prefer low-quality recommendations over missing or very slow answers from your service. We will look at the public logs in the Kafka stream to assess downtime. 
 
-**Technical details:** We recommend Docker to containerize your model serving infrastructure. You can package the model inside the container or have the container load the model from an external resource (e.g., mounted file system or web server). You can write your own simple load balancer in 10 lines of Python or Node.js code if needed, so you can switch between multiple models without downtime. Alternatively, some teams have used orchestration software like Kubernetes to manage containers, but the learning curve can be steep.  
-
-For automatic model updates, we recommend that you fully automate the process and trigger it with a cronjob, but we also accept if humans manually have to trigger a task or approve the deployment as long as it is as simple as running a single shell script.
+**Technical details:** Using your infrastructure from Milestone 2, add support for switching between multiple model versions. 
+You can write your own simple load balancer in 10 lines of code if needed, so you can switch between multiple model servers without downtime. Alternatively, some teams have used orchestration software like Kubernetes to manage containers, but the learning curve can be steep.
 
 We recommend to mostly use existing tooling for monitoring, such as Prometheus and Grafana. You may use external cloud services if you prefer. Monitor at least availability of your service (e.g., preferably analyzing the Kafka logs not just your own server's telemetry) and the online model accuracy and cost measures. You can reuse the measures from milestone 2 but should now monitor them continuously.
 
@@ -220,8 +233,7 @@ Although we do not set explicit requirements for quality assurance, we suggest t
 
 The report should include the following sections:
 
-* *Containerization* (0.5 pages max): Briefly describe how you containerized and deployed your inference service. A diagram may be helpful. Provide a pointer to the Dockerfile(s) and other relevant implementations (preferably a direct GitHub link).
-* *Automated model updates* (0.5 pages max): Briefly describe how you automatically retrain and deploy updated models. Describe how you continuously analyze user self descriptions as new users sign up. Provide a pointer to the relevant implementation (preferably a direct GitHub link).
+* *Regular model updates* (0.25 pages max): Confirm that you have executed at least three model updates in production and provide evidence that this has not resulted in significant downtime.
 * *Monitoring* (0.5 pages text max, excluding figures): Briefly describe how you set up your monitoring infrastructure and what you monitor and whether and why you set alerts. Include a screenshot of your dashboard showing at least availability, model accuracy, cost, and data drift measures. Provide pointers to the corresponding code/infrastructure (preferably a direct GitHub link).
 * *Experimentation infrastructure* (1 page max, excluding figures): Briefly describe the design of your experimentation infrastructure. Describe how you split users between models, how you track the quality of each model, and how you report differences among models. Explain the statistical tests you use and justify why they are appropriate for this task. Provide pointers to your implementation/infrastructure.
 * *Experiment results* (1 page max): Describe how you answer the two questions above with experiments. Include results for both experiments (screenshot or link). 
@@ -231,19 +243,18 @@ The report should include the following sections:
 
 **Grading:** This milestone is worth 103 points: 
 
-- [ ] 10pt: Infrastructure setup with containers is described in the report; links to relevant implementations are provided; containers are running in production.
-- [ ] 10pt: Models are automatically updated with more recent data. The report describes the process for retraining and deployment and provides pointers to the corresponding implementation. The users' self-descriptions are automatically analyzed as new users sign up. The description matches the implementation.
+- [ ] 10pt: You have conducted at least two model updates in the 72 hours before submitting this milestone without significant downtime. Evidence of the updates and the lack of downtime was provided (e.g., logs, screenshots).
 - [ ] 15pt: A monitoring infrastructure observes (a) service availability, (b) model accuracy, (c) cost of movie licenses and LLM APIs, and (d) data drift. The report describes the infrastructure. The report describes and justifies what alerts were set up or why no alerts were used. A screenshot of the service is included and pointers to implementation and running dashboard are provided (create an account for the team mentor or share credentials privately). The description matches the implementation.
-- [ ] 10pt: An infrastructure for online experimentation is implemented. Appropriate statistical tests are used to report confidence in the experiments’ results. The report describes how users are split, how quality is tracked, and how results are reported. 
-- [ ] 5pt: An experiment on the impact of using the users' self description for helping with the cold-start problem is described. It is clear what exact change was tested. A screenshot of an experiment’s outcome is included. Links to the corresponding implementation are provided. The description matches the implementation.
-- [ ] 5pt: An experiment on how different models can reduce licensing costs is described. It is clear what alternative model was tested. A screenshot of an experiment’s outcome on both cost and prediction quality (ratings) is included. Links to the corresponding implementation are provided. The description matches the implementation.
+- [ ] 10pt: An infrastructure for online experimentation is implemented. Appropriate statistical tests are used to report confidence in the experiments’ results. The report describes how users are split, how quality is tracked, and how results are reported.
+- [ ] 10pt: An experiment on the impact of using the users' self description for helping with the cold-start problem is described. It is clear what exact change was tested. A screenshot of an experiment’s outcome is included. Links to the corresponding implementation are provided. The description matches the implementation.
+- [ ] 10pt: An experiment on how different models can reduce licensing costs is described. It is clear what alternative model was tested. A screenshot of an experiment’s outcome on both cost and prediction quality (ratings) is included. Links to the corresponding implementation are provided. The description matches the implementation.
 - [ ] 10pt: The report links to an incident response plan covering at least how the team detects incidents, who is responsible for what during an incident, and how the team communicates while responding. The report describes a drill in which the team exercised their plan and includes evidence of the drill's success.
 - [ ] 10pt: The report describes how provenance is tracked. It explains how for a given prediction the responsible model can be identified and how for that model the corresponding pipeline version and training data can be identified. It illustrates that process with one concrete example. Links to the corresponding implementation are provided. The description matches the implementation.
-- [ ] 10pt: The recommendation service is at least 70% available in the 72 hours before the submission and the 96 hours after (i.e., max downtime of 50h), while at least two updates are performed in that time period.
+- [ ] 10pt: The recommendation service is at least 70% available in the 72 hours before the submission and the 96 hours after (i.e., max downtime of 50h).
 - [ ] 5pt: An updated team contract is provided with a reason for the change, or a statement that the team contract remains unchanged is included.
 - [ ] 10pt (individually): The team schedules a debriefing meeting within one week after submission of the milestone with their team mentor. The team members can convince the mentor that they understand their solution and that they have thought about alternatives (e.g., different ways to run experiments, different provenance tracking). The team members talk about their teamwork experience and any problems they may have faced.
 - [ ] 3pt (individually): The teamwork survey for this milestone is filled out.
-- [ ] 5pt: Bonus points if the recommendation service is at least 99% available in the same 7-day window (max 100min downtime), while at least two updates are performed in that time period.
+- [ ] 5pt: Bonus points if the recommendation service is at least 99% available in the same 7-day window (max 100min downtime).
 - [ ] 3pt: Bonus points for social activity (see very end of this document)
 - [ ] 3pt: Bonus points for going beyond the comfort zone (see very end of this document)
 
