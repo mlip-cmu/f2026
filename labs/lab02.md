@@ -9,9 +9,8 @@ To receive credit, show your work to the TA during recitation.
 ## Deliverables
 
 - [ ] Generate automated shopping-cart tests with a coding agent using its default setup.
-- [ ] Add Playwright using either **CLI** or **MCP** and explain the difference, your choice, and one tradeoff.
+- [ ] Add Playwright using either **CLI** or **MCP** and explain the difference, your choice, and one tradeoff. Compare the baseline and enhanced workflows, including what improved and what still required human judgment.
 - [ ] Use, adapt, or create a reusable web-testing Skill and improve it based on the agent's testing trace.
-- [ ] Compare the baseline and enhanced workflows, including what improved and what still required human judgment.
 
 ## Getting started
 
