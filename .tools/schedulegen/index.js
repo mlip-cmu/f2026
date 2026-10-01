@@ -40,7 +40,7 @@ const fs = require('fs');
         if (err) return console.log('The API returned an error: ' + err);
         const rows = res.data.values;
         if (rows.length) {
-            const columnIds = { date: null, topic: null, assignmentDue: null, slidesLink: null, bookChapters: null, reading: null, assignmentLink: null, id: null, video: null };
+            const columnIds = { date: null, topic: null, assignmentDue: null, slidesLink: null, bookChapters: null, reading: null, assignmentLink: null, id: null, video: null, code: null };
             rows[0].forEach((header, index) => {
                 if (header === "Date") columnIds.date = index;
                 else if (header === "Topic") columnIds.topic = index;
@@ -51,6 +51,7 @@ const fs = require('fs');
                 else if (header === "Id") columnIds.id = index;
                 else if (header === "Slides") columnIds.slidesLink = index;
                 else if (header === "Video") columnIds.video = index;
+                else if (header === "Code") columnIds.code = index;
             });
 
             let currentWeek = null
@@ -66,6 +67,7 @@ const fs = require('fs');
                 const assignmentText = row[columnIds.assignmentDue] || ""
                 const assignmentLink = row[columnIds.assignmentLink] || ""
                 const slidesLink = row[columnIds.slidesLink] || ""
+                const code = (columnIds.code !== null && row[columnIds.code]) || ""
                 const youtubeVideoId = (row[columnIds.video] || "").split("v=")[1]?.split("&")[0] || ""
 
                 const isLab = id.includes("lab")
@@ -149,8 +151,16 @@ const fs = require('fs');
                 // Reading
                 const readingsLine = readings ? `\n    <p class="is-size-5 has-text-grey mb-1"><strong>Required reading:</strong> ${readings.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')}</p>` : ''
 
-                // Metadata div (book + reading)
-                const metadataDiv = (chaptersLine || readingsLine) ? `\n  <div class="mt-2">${chaptersLine}${readingsLine}\n  </div>` : ''
+                // Supplementary code/materials (bare URLs or markdown links, comma-separated)
+                const codeLinksHtml = code.split(',').map(c => c.trim()).filter(c => c).map(c => {
+                    const md = c.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+                    if (md) return `<a href="${md[2]}">${md[1]}</a>`
+                    return `<a href="${c}">${c}</a>`
+                }).join(', ')
+                const codeLine = codeLinksHtml ? `\n    <p class="is-size-5 has-text-grey mb-1"><strong>Supplementary code/materials:</strong> ${codeLinksHtml}</p>` : ''
+
+                // Metadata div (book + code + reading)
+                const metadataDiv = (chaptersLine || codeLine || readingsLine) ? `\n  <div class="mt-2">${chaptersLine}${codeLine}${readingsLine}\n  </div>` : ''
 
                 // Video
                 const youtubeHtml = youtubeVideoId ? `\n  <div class="columns mt-2">\n    <div class="column is-half-desktop">\n      <div class="video-wrapper"><iframe src="https://www.youtube-nocookie.com/embed/${youtubeVideoId}" title="YouTube: Lecture Recording" allow="encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>\n    </div>\n  </div>` : ''
