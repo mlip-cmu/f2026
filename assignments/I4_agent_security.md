@@ -55,7 +55,7 @@ Second, explore security and safety concerns in the system. For this assignment,
 
 Third, harden the system to reduce the chance of direct and indirect prompt injection attacks. You can use your own LLM prompts or use an external tool such as [Lakera Guard](https://docs.lakera.ai/docs/quickstart) (now Check Point AI Guardrails), [Microsoft Prompt Shields](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection), [Google Model Armor](https://cloud.google.com/security/products/model-armor), [Meta Prompt Guard 2 / LlamaFirewall](https://github.com/meta-llama/PurpleLlama) (local open-weights classifier), [OpenAI Guardrails](https://github.com/openai/openai-guardrails-python), [NeMo Guardrails](https://github.com/NVIDIA-NeMo/Guardrails), or [Guardrails AI](https://github.com/guardrails-ai/guardrails). Simple pattern matching (e.g., regular expression) is not sufficient. While we do not expect you to rigorously evaluate effectiveness, you should measure *overhead* in terms of additional latency and cost.
 
-Finally, change the agent or MCP server to provide *guarantees* that the following five problems will not occur:
+Finally, change the agent or MCP server to provide *guarantees* that the following five properties will hold:
 - Property 1: The agent can only provide compensation for events allowed by the policy and can only do so once.
 - Property 2: The agent can only cancel flights following the policy rules.
 - Property 3: All actions that involve payments (e.g., adding a bag) must be explicitly confirmed by the user. Only confirmed actions can be executed and only exactly as they were confirmed.
