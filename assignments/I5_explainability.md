@@ -16,7 +16,7 @@ Learning goals:
 
 
 
-# The Use Case: Diabetic Retinopathy Screening
+## The Use Case: Diabetic Retinopathy Screening
 
 The use case is to detect [diabetic retinopathy](https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/diabetic-retinopathy) early with a special purpose ML-powered medical device. Diabetic retinopathy is a condition that can result in vision loss if left untreated. [AEYE Health](https://www.aeyehealth.com) is a comparable commercial offering.
 
@@ -39,7 +39,7 @@ While government regulation is still evolving, the parent company of the organiz
 
 3. Describe how the automation (model) works generally. Provide evidence that the documentation is effective for the policy purpose. [*Guidance: Where possible identify general mechanisms or factors that most strongly influence the automation.*]
 
-4. Provide a mechanism to describe how the automation (model) worked with regard to an instance of use to all intended users and subjects affected by the automated system in a form that is accessible to them. Descriptions must include (1) that automation was used, (2) a short explanation of how the automation works, (3) what additional actors are involved in decisions, (4) what significant personal data was used for the decision, (5) what decisions were reached in a specific case. Provide evidence that the documentation is effective for the policy purpose. [*Guidance: Provide individual explanations using appropriate mechanisms, such as graphs, text-based explanations, counterfactuals, or SHAP plots.*]
+4. Provide a mechanism to describe how the automation (model) worked with regard to an instance of use to all intended users and subjects affected by the automated system in a form that is accessible to them. Descriptions must include (1) that automation was used, (2) what significant personal data was used for the decision, and (3) what decisions were reached in a specific case. [*Guidance: Provide individual explanations using appropriate mechanisms, such as graphs, text-based explanations, counterfactuals, or SHAP plots.*]
 
 **CONCERNS**
 
@@ -55,7 +55,7 @@ While government regulation is still evolving, the parent company of the organiz
 
 ## Stakeholders
 
- You will provide explanations for four stakeholders: 
+You will provide explanations for four stakeholders: 
 
 * Global explanations for an ML engineer on our team who reviews the model before release: does it rely on medically plausible factors, does the patient data help, and does it behave reasonably across patient groups?
 * Global explanations for procurement officers in non-profit organizations who make decisions about buying the product
@@ -102,7 +102,7 @@ See Canvas for instructions of how to create a private repository with GitHub cl
 
 **Explanation needs (3 pages/1500 words max):** In a file `explanation_needs.md` in the root directory of the repository, describe the steps you took to identify explanation needs and provide some corresponding evidence (e.g., links to resources considered, links to chatbot transcripts, hazard analysis steps, personas). Separately describe the explanation needs you identified for each of the four stakeholders.
 
-**Explanations (3 page/1500 words max):** Include the four files `explanation_developer.md/pdf`, `explanation_procurement.md/pdf`, `explanation_nurse.md/pdf`, and `explanation_patient.md/pdf` in the root directory of the repository. Additionally, in a file `explanations.md` in the root directory of the repository, briefly describe for each stakeholder what kind of explanations you created and link them to the previously identified explanation needs. The explanations for different stakeholders may share content where appropriate. Point out where we can find each explanation in the corresponding file if it is not obvious. Provide links to code for creating the data or visualization used and point out specific techniques or tools, if you used any. Explain how we can recreate the submitted individual explanations and produce individual explanations for other patients with your code.
+**Explanations:** Include the four files `explanation_developer.md/pdf`, `explanation_procurement.md/pdf`, `explanation_nurse.md/pdf`, and `explanation_patient.md/pdf` in the root directory of the repository; these files have no page limit. Additionally, in a file `explanations.md` (3 pages/1500 words max) in the root directory of the repository, briefly describe for each stakeholder what kind of explanations you created and link them to the previously identified explanation needs. The explanations for different stakeholders may share content where appropriate. Point out where we can find each explanation in the corresponding file if it is not obvious. Provide links to code for creating the data or visualization used and point out specific techniques or tools, if you used any. Explain how we can recreate the submitted individual explanations and produce individual explanations for other patients with your code.
 
 **Compliance (4 pages/2000 words max):** In a file `compliance.md` in the root directory of the repository, discuss whether your product, with the explanations for stakeholders 2 to 4 taken together, complies with the policy requirements. If possible, provide evidence to demonstrate compliance. Write this as if you were submitting a short report to a compliance/legal team in your company to convince them that your product complies and can be released. If you cannot comply, think a policy rule is not relevant, or are unsure, discuss additional steps needed for compliance or explain why compliance may not be possible/relevant.
 
